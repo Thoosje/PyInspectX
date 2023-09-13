@@ -1,6 +1,7 @@
 import ast
 
 # TODO: Add regex support for blacklist
+# TODO: Blacklist all __ variables
 # Variables need to be in global scope so they can be accessed inside static methods
 BLACKLIST = ['__builtins__', '__doc__', '__file__', '__name__', '__package__']
 

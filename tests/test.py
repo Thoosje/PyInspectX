@@ -10,8 +10,8 @@ testCode = open(os.path.abspath(os.path.join(os.getcwd(), 'tests/example.py')), 
 # Debugger
 inspector = PyInspectX.Inspector()
 inspector.modify_code(testCode)
-modified_code = inspector.get_modified_code()
 
-#print(modified_code)
-exec(modified_code, {}, {}) # Pass {} for globals and locals so else our current scope will be used.
-# TODO: Move this into a method for the inspector class and return in a better viewable format.
+modified_code = inspector.get_modified_code()
+output = inspector.run_modified_code()
+
+print(modified_code, output)
