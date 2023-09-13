@@ -12,6 +12,17 @@ class Utils():
 
     @staticmethod
     def get_print_inject_code(nodeName='Program', inject_type='local'):
+        """
+        Get the AST node of the print statement that needs to be injected.
+        
+        Args:
+            nodeName (str): The name of the node that is being injected.
+            inject_type (str): The type of injection, can be 'local' or 'global'.
+            
+        Returns:
+            ast.Module: The AST node of the print statement that needs to be injected.
+        """
+        
         if inject_type == 'local':
             inject_func = 'locals'
             print_str = '\nLocal Variables in scope {}:'.format(nodeName)

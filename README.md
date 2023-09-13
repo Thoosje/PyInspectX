@@ -17,7 +17,7 @@ The main class of the program is the ```Inspector``` class. This class can be us
 > The snippet below shows how to generate the modified code.
 
 ```python
-from pyinspectx import Inpesctor
+from pyinspectx import Inspector
 
 testCode = open(os.path.abspath(os.path.join(os.getcwd(), 'example.py')), 'r', encoding='utf-8').read()
 
@@ -31,7 +31,7 @@ print(modified_code)
 > There is a built in method that generates a temp file inside the current working directory and runs the result for you. The output can be accessed inside a variable.
 
 ```python
-from pyinspectx import Inpesctor
+from pyinspectx import Inspector
 
 testCode = open(os.path.abspath(os.path.join(os.getcwd(), 'example.py')), 'r', encoding='utf-8').read()
 
