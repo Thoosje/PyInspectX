@@ -1,1 +1,1 @@
-from FunctionVisitor import Visitor as FunctionVisitor
+from .FunctionVisitor import Visitor as FunctionVisitor

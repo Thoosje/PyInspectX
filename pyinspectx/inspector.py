@@ -1,5 +1,5 @@
 import ast
-import visitors
+from . import visitors
 
 class Inspector():
     def __init__(self):
@@ -8,4 +8,5 @@ class Inspector():
         
     def modify_code(self, code):
         self.parsed_code = ast.parse(code)
-        self.transformed_code = visitors.VariablePrinter().visit(self.parsed_code)
+        self.transformed_code = visitors.FunctionVisitor().visit(self.parsed_code)
+        print(self.transformed_code)
