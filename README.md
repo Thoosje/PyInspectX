@@ -53,3 +53,4 @@ Inside the ``./tests/`` folder you can find a few examples on how to use the pac
 * New JSON output format so it can be used for automation and testing.
 * Find more edge cases
 * Check for compatibility with other Python versions and systems.
+* Setup Github action for pytest and flake8
