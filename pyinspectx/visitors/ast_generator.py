@@ -103,11 +103,41 @@ class AstGenerator:
                                     ],
                                     keywords=[],
                                 ),
-                                ops=[ast.Eq()],
-                                comparators=[ast.Str(s="<class 'function'>")],
+                                ops=[
+                                    ast.In()
+                                ],  # <class 'module'> ast.Str(s="<class 'function'>")
+                                comparators=[
+                                    ast.Tuple( # Possible to add more or reverse this statement and check with regex or <class in ..
+                                        elts=[
+                                            ast.Str(s="<class 'function'>"),
+                                            ast.Str(s="<class 'module'>"),
+                                            ast.Str(s="<class 'type'>"),
+                                        ],
+                                        ctx=ast.Store(),
+                                    )
+                                ],
                             ),
                             body=[
-                                ast.Return()  # TODO: We need to go 1 level deeper in here
+                                ast.Assign(
+                                    targets=[ast.Name(id="var_value", ctx=ast.Store())],
+                                    value=ast.Call(
+                                        func=ast.Name(id="str", ctx=ast.Load()),
+                                        args=[
+                                            ast.Call(
+                                                func=ast.Name(
+                                                    id="type", ctx=ast.Load()
+                                                ),
+                                                args=[
+                                                    ast.Name(
+                                                        id="var_value", ctx=ast.Store()
+                                                    )
+                                                ],
+                                                keywords=[],
+                                            )
+                                        ],
+                                        keywords=[],
+                                    ),
+                                )
                             ],
                             orelse=[],
                         ),

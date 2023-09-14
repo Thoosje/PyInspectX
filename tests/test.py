@@ -16,4 +16,4 @@ inspector.modify_code(testCode)
 
 modified_code = inspector.get_modified_code()
 output = inspector.run_modified_code()
-print(modified_code)
+print(output)
