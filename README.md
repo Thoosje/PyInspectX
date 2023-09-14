@@ -1,7 +1,7 @@
 # PyInspectX
 
 A simple Python package to access all variables, per scope after a runtime. Can be used
-for multiple purposes. Mainly debugging.
+for multiple purposes. (Ex: debugging, visual tool to highlight variables in runtime, ...)
 
 ## Installation
 
@@ -47,10 +47,10 @@ print(output)
 Inside the ``./tests/`` folder you can find a few examples on how to use the package.
 
 ## TODO
-* Add general (regex and keyword) support to block basic variable names inside the runtime.
-* Add support to customize injected code variable names so they don't conflict with the runtime.
-* Make a better viewer for the raw data
-* New JSON output format so it can be used for automation and testing.
-* Find more edge cases
-* Check for compatibility with other Python versions and systems.
-* Setup Github action for pytest and flake8
+- [ ] Add general (regex and keyword) support to block basic variable names inside the runtime.
+- [x] Make injected variables names random.
+- [ ] Make a better viewer for the raw data
+- [ ] New JSON output format so it can be used for automation and testing.
+- [ ] Find more edge cases
+- [ ] Check for compatibility with other Python versions and systems.
+- [ ] Setup Github action for pytest and flake8

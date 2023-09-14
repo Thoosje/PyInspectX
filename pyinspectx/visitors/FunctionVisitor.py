@@ -15,12 +15,18 @@ class Visitor(ast.NodeTransformer):
     
         inject_node = Utils.get_print_inject_code(nodeName=node.name, inject_type='local')
         
-        # Loop over all the subnodes of the function and see if one of them is a return function. If so, inject the code before the return statement.
+        # Loop over all the subnodes: check for Return Statement
         for i, subnode in enumerate(node.body):
             if isinstance(subnode, ast.Return):
                 node.body.insert(i, inject_node)
                 return node
 
+        # Loop over all the subnodes: check for FunctionDef (nested function)
+        for i, subnode in enumerate(node.body):
+            if isinstance(subnode, ast.FunctionDef):
+                self.visit_FunctionDef(subnode)
+                continue
+            
         # If no return statement was found, just append the code to the end of the function.
         node.body = node.body + inject_node.body
         return node

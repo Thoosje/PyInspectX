@@ -1,11 +1,8 @@
-def func2(var2):
-    var3 = var2 + 'bbb'
-    print(var3)
 
-def func1():
-    var1 = 'aaa'
+def func1(var1):
+    def func2(test):
+        var3 = 'vvv' + test
+        
     func2(var1)
     
-func1()
-
-print(locals())
+func1('hi')

@@ -6,30 +6,30 @@ from . import visitors
 class Inspector():
     def __init__(self):
         self.parsed_code = None
-        self.transformed_code = None
+        self.transformed_ast = None
         
     def modify_code(self, code):
         """
-        Modify the code by injecting the print statements.
+        Modify the code by injecting the print statements in every def and at the end of the code.
         
         Args:
             code (str): The code that needs to be modified.
         """
         
         self.parsed_code = ast.parse(code)
-        self.transformed_code = visitors.FunctionVisitor().visit(self.parsed_code)
+        self.transformed_ast = visitors.FunctionVisitor().visit(self.parsed_code)
+        
+        self.transformed_ast.body.append(visitors.Utils.get_print_inject_code(nodeName='Program', inject_type='global'))
         
     def get_modified_ast(self):
         """
-        Injects one more print statement at the end of the code to print the global variables.
         Returns the modified ast.
         
         Returns:
             ast: The modified ast, cannot be run.
         """
         
-        self.transformed_code.body.append(visitors.Utils.get_print_inject_code(nodeName='Program', inject_type='global'))
-        return self.transformed_code
+        return self.transformed_ast
     
     def get_modified_code(self):
         """
