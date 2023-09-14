@@ -2,6 +2,9 @@ import ast
 from .utils import Utils
 
 class Visitor(ast.NodeTransformer):
+    def __init__(self, storage_dict_name):
+        self.storage_dict_name = storage_dict_name
+        
     def visit_FunctionDef(self, node):
         """
         Ast visitor to access the function definitions in the code and modify them.
@@ -13,7 +16,7 @@ class Visitor(ast.NodeTransformer):
             ast.NodeTransformer: Ast node transformer that has been modified.
         """
     
-        inject_node = Utils.get_print_inject_code(nodeName=node.name, inject_type='local')
+        inject_node = Utils.get_inject_node(self.storage_dict_name, nodeName=node.name, inject_type='local')
         
         # Loop over all the subnodes: check for Return Statement
         for i, subnode in enumerate(node.body):

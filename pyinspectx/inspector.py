@@ -1,12 +1,12 @@
 import ast, astor, subprocess
-import os
+import os, json
 
 from . import visitors
 
 class Inspector():
     def __init__(self):
-        self.parsed_code = None
         self.transformed_ast = None
+        self.storage_dict_name = None # Variable name of the dictionary where the variables will be stored.
         
     def modify_code(self, code):
         """
@@ -16,10 +16,15 @@ class Inspector():
             code (str): The code that needs to be modified.
         """
         
-        self.parsed_code = ast.parse(code)
-        self.transformed_ast = visitors.FunctionVisitor().visit(self.parsed_code)
+        self.transformed_ast = ast.parse(code)
         
-        self.transformed_ast.body.append(visitors.Utils.get_print_inject_code(nodeName='Program', inject_type='global'))
+        # Inject all the needed code.
+        storage_node, self.storage_dict_name = visitors.Utils.get_storage_node()
+        
+        self.transformed_ast.body.insert(0, storage_node)
+        self.transformed_ast = visitors.FunctionVisitor(self.storage_dict_name).visit(self.transformed_ast)
+        self.transformed_ast.body.append(visitors.Utils.get_inject_node(self.storage_dict_name, nodeName='Program', inject_type='global'))
+        self.transformed_ast.body.append(visitors.Utils.get_print_storage_node(self.storage_dict_name))
         
     def get_modified_ast(self):
         """
@@ -46,7 +51,7 @@ class Inspector():
         Run the modified code in temp file (in working dir) and returns the output (Variables per scope).
         
         Returns:
-            str: All the variables per scope.
+            dict: All the variables per scope.
         """
         
         script_directory = os.getcwd()
@@ -59,4 +64,4 @@ class Inspector():
         output = subprocess.check_output(['py', script_path], stderr=subprocess.STDOUT, universal_newlines=True)
         os.remove(script_path)
         
-        return output
+        return json.loads(output)

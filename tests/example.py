@@ -1,4 +1,3 @@
-
 def func1(var1):
     def func2(test):
         var3 = 'vvv' + test
