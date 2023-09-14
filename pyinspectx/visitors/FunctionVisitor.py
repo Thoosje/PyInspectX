@@ -1,9 +1,9 @@
 import ast
-from .utils import Utils
+from .ast_generator import AstGenerator
 
 class Visitor(ast.NodeTransformer):
-    def __init__(self, storage_dict_name):
-        self.storage_dict_name = storage_dict_name
+    def __init__(self, debug_function_name):
+        self.debug_function_name = debug_function_name
         
     def visit_FunctionDef(self, node):
         """
@@ -15,8 +15,11 @@ class Visitor(ast.NodeTransformer):
         Returns:
             ast.NodeTransformer: Ast node transformer that has been modified.
         """
+        
+        if node.name == self.debug_function_name:
+            return node
     
-        inject_node = Utils.get_inject_node(self.storage_dict_name, nodeName=node.name, inject_type='local')
+        inject_node = AstGenerator.get_inject_node(self.debug_function_name, node_name=node.name)
         
         # Loop over all the subnodes: check for Return Statement
         for i, subnode in enumerate(node.body):
