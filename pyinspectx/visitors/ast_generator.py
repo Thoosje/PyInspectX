@@ -275,7 +275,7 @@ class AstGenerator:
         return print_node
 
     @staticmethod
-    def get_inject_node(debug_function_name, node_name="Program"):
+    def get_inject_node(debug_function_name, node_name="Program", parent_node_name=None):
         """
         Creates the AST node of the calls the debug function where the items can be saved..
 
@@ -287,6 +287,12 @@ class AstGenerator:
             ast.Module: The AST node of the print statement that needs to be injected.
         """
 
+        if parent_node_name:
+            debug_name = parent_node_name + '.' + node_name
+        else:
+            debug_name = node_name
+
+
         # Generate the inject AST node
         inject_node = ast.Module(
             [
@@ -294,7 +300,7 @@ class AstGenerator:
                     value=ast.Call(
                         func=ast.Name(id=debug_function_name, ctx=ast.Load()),
                         args=[
-                            ast.Str(s=node_name),
+                            ast.Str(s=debug_name),
                             ast.Call(
                                 func=ast.Attribute(
                                     value=ast.Call(

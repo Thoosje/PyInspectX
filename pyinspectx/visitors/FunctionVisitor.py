@@ -5,7 +5,7 @@ class Visitor(ast.NodeTransformer):
     def __init__(self, debug_function_name):
         self.debug_function_name = debug_function_name
         
-    def visit_FunctionDef(self, node):
+    def visit_FunctionDef(self, node, parent_node=None):
         """
         Ast visitor to access the function definitions in the code and modify them.
 
@@ -18,8 +18,11 @@ class Visitor(ast.NodeTransformer):
         
         if node.name == self.debug_function_name:
             return node
-    
-        inject_node = AstGenerator.get_inject_node(self.debug_function_name, node_name=node.name)
+
+        if parent_node:
+            inject_node = AstGenerator.get_inject_node(self.debug_function_name, node_name=node.name, parent_node_name=parent_node.name)
+        else:
+            inject_node = AstGenerator.get_inject_node(self.debug_function_name, node_name=node.name)
         
         # Loop over all the subnodes: check for Return Statement
         for i, subnode in enumerate(node.body):
@@ -30,7 +33,7 @@ class Visitor(ast.NodeTransformer):
         # Loop over all the subnodes: check for FunctionDef (nested function)
         for i, subnode in enumerate(node.body):
             if isinstance(subnode, ast.FunctionDef):
-                self.visit_FunctionDef(subnode)
+                self.visit_FunctionDef(subnode, parent_node=node)
                 continue
             
         # If no return statement was found, just append the code to the end of the function.

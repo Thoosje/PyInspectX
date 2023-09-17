@@ -3,6 +3,7 @@ import astor
 import subprocess
 import os
 import json
+import sys
 
 from . import visitors
 
@@ -83,7 +84,7 @@ class Inspector:
         file.close()
 
         all_output = subprocess.check_output(
-            ["py", script_path], stderr=subprocess.STDOUT, universal_newlines=True
+            [sys.executable, script_path], stderr=subprocess.STDOUT, universal_newlines=True
         )
         os.remove(script_path)
         storage_result = all_output.split('\n')[-2]
