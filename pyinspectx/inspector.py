@@ -6,6 +6,7 @@ import json
 import sys
 
 from . import visitors
+from .utils import Utils
 
 
 class Inspector:
@@ -68,12 +69,19 @@ class Inspector:
 
         return astor.to_source(self.get_modified_ast())
 
-    def run_modified_code(self):
+    def run_modified_code(self, raw=True):
         """
-        Run the modified code in temp file (in working dir) and returns the output (Variables per scope).
+        Run the modified code in temp file (in working dir) and returns the output raw or pretty printend depending on the "raw" value.
+
+        Args:
+            raw (bool, optional): If True, returns the raw output as a dictionary. If False,
+                returns the formatted output using Utils.pretty_print_dict. Default is True.
 
         Returns:
-            dict: All the variables per scope.
+            dict or str: All the variables per scope as a dictionary or a formatted string.
+
+        Raises:
+            subprocess.CalledProcessError: If the subprocess call to execute the modified code fails.
         """
 
         script_directory = os.getcwd()
@@ -84,9 +92,18 @@ class Inspector:
         file.close()
 
         all_output = subprocess.check_output(
-            [sys.executable, script_path], stderr=subprocess.STDOUT, universal_newlines=True
+            [sys.executable, script_path],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
         )
         os.remove(script_path)
-        storage_result = all_output.split('\n')[-2]
+        storage_result = all_output.split("\n")[-2]
 
-        return json.loads(storage_result)
+        reversed_result = {
+            k: v for k, v in reversed(list(json.loads(storage_result).items()))
+        }  # Reverse the list in a logical order (Program scope first, ...)
+
+        if raw:
+            return reversed_result
+        else:
+            return Utils.pretty_print_dict(reversed_result)
